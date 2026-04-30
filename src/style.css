@@ -1592,10 +1592,11 @@ html, body {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(4, auto);
   gap: 12px;
   width: 100%;
   min-height: 0;
+  align-content: start;
 }
 
 .mc-city-card {
@@ -1646,7 +1647,7 @@ html, body {
 .mc-city-name > span { position: relative; z-index: 1; }
 
 .mc-city-body {
-  padding: 12px 18px 12px 18px;
+  padding: 10px 16px;
   overflow-y: auto;
   min-height: 0;
   scrollbar-width: thin;
@@ -1658,9 +1659,9 @@ html, body {
 .mc-city-body::-webkit-scrollbar-track { background: transparent; }
 
 .mc-city-body p {
-  margin: 0 0 6px 0;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  margin: 0 0 5px 0;
+  font-size: 0.8rem;
+  line-height: 1.42;
   color: var(--text-strong);
 }
 .mc-city-body p:last-child { margin-bottom: 0; }
@@ -2961,11 +2962,11 @@ html, body {
 }
 
 .outer-trend-card .mc-right {
-  margin: 24px 0 0;
+  margin: 18px 0 0;
 }
 
 .outer-trend-card .mc-cities {
-  grid-template-rows: repeat(4, minmax(118px, auto));
+  grid-template-rows: repeat(4, auto);
 }
 
 .outer-city-tabs {
@@ -3889,7 +3890,7 @@ html, body {
   padding: 14px 16px 12px;
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
   isolation: isolate;
   overflow: hidden;
@@ -3949,7 +3950,7 @@ html, body {
 .city-carousel-viewport {
   overflow: hidden;
   border-radius: 12px;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .city-carousel-track {
