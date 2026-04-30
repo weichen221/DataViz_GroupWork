@@ -2464,6 +2464,15 @@ html, body {
   min-width: 0;
 }
 
+.content-split--carousel .chart-grid {
+  gap: 16px;
+  align-content: start;
+}
+
+.content-split--carousel .panel {
+  min-height: 360px;
+}
+
 @media (max-width: 960px) {
   .content-split { grid-template-columns: 1fr; }
 }
