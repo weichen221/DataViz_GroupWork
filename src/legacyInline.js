@@ -14,7 +14,7 @@
 
     /* ---- 2. Active nav link via IntersectionObserver ---- */
     const navLinks = document.querySelectorAll('.site-nav-links a[data-nav-link]');
-    const sectionIds = ['overview','flood-records','Time-patterns','housing-exposure','insights','team'];
+    const sectionIds = ['overview','flood-records','Time-patterns','market-context','housing-exposure','insights','team'];
     const sections = sectionIds
       .map(id => document.getElementById(id))
       .filter(Boolean);
