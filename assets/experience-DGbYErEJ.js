@@ -1,22 +1,19 @@
 var e=window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,t=[{id:`overview`,label:`Overview`},{id:`flood-records`,label:`Flood Records`},{id:`Time-patterns`,label:`Time Patterns`},{id:`market-context`,label:`Market Context`},{id:`housing-exposure`,label:`Housing Exposure`},{id:`insights`,label:`Insights`},{id:`team`,label:`Team`}];document.body.classList.add(`experience-ready`);function n(){let t=document.createElement(`div`);t.className=`opening-splash`,t.setAttribute(`aria-hidden`,`true`),t.innerHTML=`
-    <div class="opening-splash-grid"></div>
-    <div class="opening-splash-rain" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span>
+    <div class="opening-splash-water"></div>
+    <div class="opening-splash-spray" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
-    <div class="opening-splash-map" aria-hidden="true">
-      <span class="risk-node risk-node--london"></span>
-      <span class="risk-node risk-node--hull"></span>
-      <span class="risk-node risk-node--york"></span>
-      <span class="risk-node risk-node--yarmouth"></span>
+    <div class="opening-splash-crest" aria-hidden="true">
+      <span></span>
+      <span></span>
     </div>
     <div class="opening-splash-waves">
       <span></span>
       <span></span>
       <span></span>
     </div>
-    <div class="opening-splash-scan"></div>
     <div class="opening-splash-content">
-      <span class="opening-splash-kicker">Recorded Flood Intelligence</span>
+      <span class="opening-splash-kicker">Flood Risk Visualisation</span>
       <strong>UK Flood Explorer</strong>
       <em>Flood outlines · Urban exposure · Housing market signals</em>
       <div class="opening-splash-meter"><span></span></div>

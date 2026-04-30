@@ -18,6 +18,15 @@
     Unknown: "#999999",
   };
   const SEASON_ORDER = ["Spring", "Summer", "Autumn", "Winter", "Unknown"];
+  const SOURCE_COLOUR = [
+    "#2563eb",
+    "#38bdf8",
+    "#0f766e",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
+    "#64748b",
+  ];
 
   const MAP_GEOJSON = "data/uk_flood_frequency_simplified.geojson";
   const MAP_NAME_FIELD = "LAD25NM";
@@ -137,22 +146,32 @@
     const maxCount = d3.max(Object.values(grouped).flat(), (d) => d.event_count) || 1;
 
     for (const city of CITY_ORDER) {
-      const panel = grid.append("div").attr("class", "panel");
+      const panel = grid
+        .append("div")
+        .attr("class", "panel flip-panel")
+        .attr("data-city", city);
+      const inner = panel.append("div").attr("class", "flip-panel-inner");
+      const front = inner.append("div").attr("class", "flip-face flip-face-front");
+      const back = inner.append("div").attr("class", "flip-face flip-face-back");
       const cityData = grouped[city];
       const total = d3.sum(cityData, (d) => d.event_count);
+      const summary = summariseCityBreakdowns(cityData);
 
       const years = cityData.map((d) => d.year);
       const xDomain = years.length ? [d3.min(years) - 1, d3.max(years) + 1] : [2000, 2020];
 
-      panel.append("div").attr("class", "panel-header").html(`
+      front.append("div").attr("class", "panel-header").html(`
         <h2 class="panel-title">${CITY_DISPLAY[city]}</h2>
-        <span class="panel-meta"><span class="meta-value">${total}</span> events</span>
+        <div class="panel-header-actions">
+          <span class="panel-meta"><span class="meta-value">${total}</span> events</span>
+          <button class="panel-flip-btn" type="button" aria-label="Show ${CITY_DISPLAY[city]} pie charts">Flip</button>
+        </div>
       `);
 
       const seasonsPresent = SEASON_ORDER.filter((s) =>
         cityData.some((d) => d.dominant_season === s)
       );
-      const legendRow = panel
+      const legendRow = front
         .append("div")
         .attr("class", "panel-legend")
         .attr("aria-label", "Seasons shown in this chart");
@@ -165,7 +184,144 @@
         chip.append("span").text(season);
       }
 
-      drawPanelChart(panel.node(), cityData, { xDomain, maxCount });
+      drawPanelChart(front.node(), cityData, { xDomain, maxCount });
+      renderPanelBack(back, city, total, summary);
+    }
+
+    grid.selectAll(".panel-flip-btn").on("click", function () {
+      const card = this.closest(".flip-panel");
+      if (!card) return;
+      card.classList.toggle("is-flipped");
+    });
+  }
+
+  function summariseCityBreakdowns(cityData) {
+    const uniqueEvents = Array.from(
+      d3.group(cityData.flatMap((d) => d.events), (d) => d.rec_grp_id),
+      ([, items]) => items[0]
+    );
+
+    const bySeason = SEASON_ORDER.map((season) => ({
+      label: season,
+      value: uniqueEvents.filter((event) => event.fxg_season === season).length,
+      color: SEASON_COLOUR[season],
+    })).filter((d) => d.value > 0);
+
+    const sourceEntries = Array.from(
+      d3.rollup(
+        uniqueEvents,
+        (items) => items.length,
+        (event) => cleanSourceLabel(event.fxg_flood_src)
+      ),
+      ([label, value], index) => ({
+        label,
+        value,
+        color: SOURCE_COLOUR[index % SOURCE_COLOUR.length],
+      })
+    ).sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+
+    return { bySeason, bySource: sourceEntries };
+  }
+
+  function cleanSourceLabel(value) {
+    const label = (value || "").trim();
+    if (!label) return "Unknown";
+    return label.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  function renderPanelBack(back, city, total, summary) {
+    back.html(`
+      <div class="panel-back-header">
+        <div>
+          <h2 class="panel-title">${CITY_DISPLAY[city]}</h2>
+          <p class="panel-back-subtitle">${total} recorded events · grouped by season and source</p>
+        </div>
+        <button class="panel-flip-btn" type="button" aria-label="Return to ${CITY_DISPLAY[city]} annual chart">Back</button>
+      </div>
+      <div class="panel-pies">
+        <article class="pie-card">
+          <h3>By season</h3>
+          <div class="pie-chart" data-pie="season"></div>
+        </article>
+        <article class="pie-card">
+          <h3>By source</h3>
+          <div class="pie-chart" data-pie="source"></div>
+        </article>
+      </div>
+    `);
+
+    drawPieChart(back.select('[data-pie="season"]').node(), summary.bySeason);
+    drawPieChart(back.select('[data-pie="source"]').node(), summary.bySource);
+  }
+
+  function drawPieChart(container, data) {
+    const width = 230;
+    const height = 196;
+    const radius = 58;
+    const svg = d3
+      .select(container)
+      .append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
+
+    if (!data.length) {
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .attr("class", "pie-empty")
+        .text("No data");
+      return;
+    }
+
+    const total = d3.sum(data, (d) => d.value);
+    const pie = d3.pie().value((d) => d.value).sort(null);
+    const arc = d3.arc().innerRadius(radius * 0.52).outerRadius(radius);
+    const arcHover = d3.arc().innerRadius(radius * 0.52).outerRadius(radius + 4);
+    const g = svg.append("g").attr("transform", `translate(${72},${height / 2 - 4})`);
+
+    g.selectAll("path")
+      .data(pie(data))
+      .enter()
+      .append("path")
+      .attr("class", "pie-slice")
+      .attr("d", arc)
+      .attr("fill", (d) => d.data.color)
+      .on("mouseenter", function () {
+        d3.select(this).transition().duration(130).attr("d", arcHover);
+      })
+      .on("mouseleave", function () {
+        d3.select(this).transition().duration(130).attr("d", arc);
+      });
+
+    g.append("text")
+      .attr("class", "pie-total")
+      .attr("text-anchor", "middle")
+      .attr("y", -2)
+      .text(total);
+    g.append("text")
+      .attr("class", "pie-total-label")
+      .attr("text-anchor", "middle")
+      .attr("y", 14)
+      .text("events");
+
+    const legend = svg.append("g").attr("class", "pie-legend").attr("transform", "translate(142,38)");
+    const maxLegend = 5;
+    const visible = data.slice(0, maxLegend);
+    visible.forEach((item, index) => {
+      const row = legend.append("g").attr("transform", `translate(0,${index * 24})`);
+      row.append("circle").attr("r", 4.5).attr("fill", item.color).attr("cx", 0).attr("cy", 0);
+      row.append("text")
+        .attr("x", 10)
+        .attr("y", 4)
+        .text(`${item.label} (${item.value})`);
+    });
+    if (data.length > maxLegend) {
+      legend.append("text")
+        .attr("x", 10)
+        .attr("y", maxLegend * 24 + 4)
+        .attr("class", "pie-more")
+        .text(`+${data.length - maxLegend} more`);
     }
   }
 
