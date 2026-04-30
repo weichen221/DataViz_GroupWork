@@ -45,8 +45,8 @@ html, body {
   overflow: hidden;
   cursor: pointer;
   background:
-    linear-gradient(135deg, rgba(9, 24, 46, 0.98), rgba(14, 51, 78, 0.97) 48%, rgba(17, 82, 95, 0.96)),
-    #081b2d;
+    linear-gradient(135deg, rgba(3, 10, 24, 0.99), rgba(7, 25, 52, 0.98) 46%, rgba(11, 45, 74, 0.97)),
+    #06101f;
   color: #f8fbff;
   clip-path: inset(0 0 0 0);
   transition: opacity 0.62s ease, transform 0.72s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.72s ease;
@@ -62,16 +62,16 @@ html, body {
 
 .opening-splash::before {
   background:
-    repeating-linear-gradient(0deg, rgba(151, 216, 196, 0.08) 0 1px, transparent 1px 38px),
-    repeating-linear-gradient(90deg, rgba(107, 154, 196, 0.08) 0 1px, transparent 1px 42px);
+    repeating-linear-gradient(0deg, rgba(96, 165, 250, 0.11) 0 1px, transparent 1px 38px),
+    repeating-linear-gradient(90deg, rgba(125, 211, 252, 0.08) 0 1px, transparent 1px 42px);
   mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 80%, transparent);
   animation: splash-grid-drift 7s linear infinite;
 }
 
 .opening-splash::after {
   background:
-    linear-gradient(110deg, transparent 0 28%, rgba(151, 216, 196, 0.15) 36%, transparent 46% 100%),
-    linear-gradient(180deg, transparent 0 58%, rgba(64, 89, 173, 0.22) 100%);
+    linear-gradient(110deg, transparent 0 28%, rgba(125, 211, 252, 0.18) 36%, transparent 46% 100%),
+    linear-gradient(180deg, transparent 0 56%, rgba(30, 64, 175, 0.34) 100%);
   transform: translateX(-35%);
   animation: splash-light-sweep 2.6s ease-in-out infinite;
 }
@@ -92,16 +92,90 @@ html, body {
 
 .opening-splash-grid {
   background:
-    radial-gradient(ellipse at 50% 82%, rgba(151, 216, 196, 0.16), transparent 52%),
+    radial-gradient(ellipse at 50% 82%, rgba(37, 99, 235, 0.24), transparent 54%),
+    radial-gradient(ellipse at 50% 18%, rgba(14, 165, 233, 0.12), transparent 44%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 36%);
 }
 
 .opening-splash-scan {
-  background: linear-gradient(180deg, transparent, rgba(244, 185, 66, 0.18), transparent);
+  background: linear-gradient(180deg, transparent, rgba(56, 189, 248, 0.2), transparent);
   height: 32%;
   top: -32%;
   animation: splash-scan 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.18s infinite;
 }
+
+.opening-splash-rain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.opening-splash-rain span {
+  position: absolute;
+  top: -18%;
+  width: 1px;
+  height: 34vh;
+  background: linear-gradient(180deg, transparent, rgba(147, 197, 253, 0.62), transparent);
+  opacity: 0.42;
+  transform: rotate(12deg);
+  animation: splash-rain 1.35s linear infinite;
+}
+
+.opening-splash-rain span:nth-child(1) { left: 16%; animation-delay: -0.2s; }
+.opening-splash-rain span:nth-child(2) { left: 33%; animation-delay: -0.78s; }
+.opening-splash-rain span:nth-child(3) { left: 54%; animation-delay: -0.42s; }
+.opening-splash-rain span:nth-child(4) { left: 72%; animation-delay: -1.08s; }
+.opening-splash-rain span:nth-child(5) { left: 88%; animation-delay: -0.62s; }
+
+.opening-splash-map {
+  position: absolute;
+  width: min(620px, 80vw);
+  height: min(620px, 80vw);
+  pointer-events: none;
+  opacity: 0.72;
+  border: 1px solid rgba(96, 165, 250, 0.16);
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.16) 0 1px, transparent 1px 54px),
+    linear-gradient(130deg, transparent 0 38%, rgba(59, 130, 246, 0.1) 38% 40%, transparent 40% 100%);
+  box-shadow: inset 0 0 70px rgba(37, 99, 235, 0.18), 0 0 90px rgba(14, 165, 233, 0.08);
+  transform: rotate(-8deg);
+}
+
+.opening-splash-map::before,
+.opening-splash-map::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: 52% 48% 54% 46%;
+}
+
+.opening-splash-map::before {
+  inset: 16% 28% 18% 24%;
+  transform: rotate(18deg);
+}
+
+.opening-splash-map::after {
+  inset: 28% 17% 24% 38%;
+  transform: rotate(-24deg);
+}
+
+.risk-node {
+  position: absolute;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #bfdbfe;
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.14), 0 0 28px rgba(56, 189, 248, 0.85);
+  animation: splash-node-pulse 1.75s ease-in-out infinite;
+}
+
+.risk-node--london { left: 59%; top: 67%; animation-delay: -0.2s; }
+.risk-node--hull { left: 55%; top: 40%; animation-delay: -0.65s; }
+.risk-node--york { left: 49%; top: 46%; animation-delay: -1s; }
+.risk-node--yarmouth { left: 69%; top: 51%; animation-delay: -1.35s; }
 
 .opening-splash-waves {
   position: absolute;
@@ -118,8 +192,8 @@ html, body {
   left: 0;
   right: 0;
   height: 56px;
-  border: 1px solid rgba(151, 216, 196, 0.5);
-  border-color: rgba(151, 216, 196, 0.5) transparent transparent;
+  border: 1px solid rgba(125, 211, 252, 0.5);
+  border-color: rgba(125, 211, 252, 0.5) transparent transparent;
   border-radius: 50%;
   transform: translateY(var(--wave-y, 0)) scaleX(1.1);
   animation: splash-wave 2.8s ease-in-out infinite;
@@ -152,7 +226,7 @@ html, body {
 
 .opening-splash-kicker {
   margin-bottom: 14px;
-  color: rgba(151, 216, 196, 0.92);
+  color: rgba(125, 211, 252, 0.94);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -190,7 +264,7 @@ html, body {
   width: 100%;
   height: 100%;
   transform-origin: left center;
-  background: linear-gradient(90deg, var(--pearl-aqua), var(--sunflower-gold), #ffffff);
+  background: linear-gradient(90deg, #38bdf8, #2563eb, #f8fbff);
   animation: splash-meter 2.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -231,6 +305,25 @@ html, body {
   58%,
   100% {
     transform: translateY(420%);
+  }
+}
+
+@keyframes splash-rain {
+  to {
+    transform: translate3d(14vw, 132vh, 0) rotate(12deg);
+  }
+}
+
+@keyframes splash-node-pulse {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
   }
 }
 

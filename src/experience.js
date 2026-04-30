@@ -18,6 +18,15 @@ function createOpeningSplash() {
   splash.setAttribute('aria-hidden', 'true');
   splash.innerHTML = `
     <div class="opening-splash-grid"></div>
+    <div class="opening-splash-rain" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="opening-splash-map" aria-hidden="true">
+      <span class="risk-node risk-node--london"></span>
+      <span class="risk-node risk-node--hull"></span>
+      <span class="risk-node risk-node--york"></span>
+      <span class="risk-node risk-node--yarmouth"></span>
+    </div>
     <div class="opening-splash-waves">
       <span></span>
       <span></span>
@@ -25,9 +34,9 @@ function createOpeningSplash() {
     </div>
     <div class="opening-splash-scan"></div>
     <div class="opening-splash-content">
-      <span class="opening-splash-kicker">Flood Risk Visualisation</span>
+      <span class="opening-splash-kicker">Recorded Flood Intelligence</span>
       <strong>UK Flood Explorer</strong>
-      <em>Recorded Floods · Urban Exposure · Housing Markets</em>
+      <em>Flood outlines · Urban exposure · Housing market signals</em>
       <div class="opening-splash-meter"><span></span></div>
     </div>
   `;
