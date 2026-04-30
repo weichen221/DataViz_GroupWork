@@ -1,4 +1,5 @@
 (() => {
+  const d3 = window.d3;
   const CSV_PATH = "data/four_city_events.csv";
 
   const CITY_ORDER = ["Hull", "York", "GreatYarmouth", "London"];
@@ -571,6 +572,7 @@
 
     // Responsive re-projection
     const onResize = debounce(() => {
+  const d3 = window.d3;
       sizeAndProject();
       svg.call(zoom.transform, d3.zoomIdentity);
     }, 150);

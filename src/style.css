@@ -31,9 +31,224 @@ html, body {
   scroll-behavior: smooth;
 }
 
+.scroll-progress {
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  pointer-events: none;
+  background: rgba(5, 10, 20, 0.08);
+}
+
+.scroll-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--pearl-aqua), var(--sunflower-gold), var(--sapphire));
+  box-shadow: 0 0 18px rgba(151, 216, 196, 0.55);
+}
+
+.story-rail {
+  position: fixed;
+  z-index: 9000;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(64, 89, 173, 0.14);
+  box-shadow: 0 10px 30px rgba(20, 32, 60, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.story-rail a {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(64, 89, 173, 0.28);
+  color: var(--sapphire);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.story-rail a::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+}
+
+.story-rail a span {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%) translateX(8px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(10, 19, 34, 0.88);
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(10, 19, 34, 0.18);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.story-rail a:hover,
+.story-rail a.is-active {
+  transform: scale(1.45);
+  background: var(--sunflower-gold);
+  box-shadow: 0 0 0 5px rgba(244, 185, 66, 0.16), 0 0 18px rgba(244, 185, 66, 0.38);
+}
+
+.story-rail a:hover span,
+.story-rail a.is-active span {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.fx-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(8px);
+  transition:
+    opacity 0.72s ease var(--fx-delay, 0ms),
+    transform 0.72s cubic-bezier(0.22, 1, 0.36, 1) var(--fx-delay, 0ms),
+    filter 0.72s ease var(--fx-delay, 0ms);
+}
+
+.fx-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.fx-title {
+  position: relative;
+  display: inline-block;
+}
+
+.fx-title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: min(72%, 320px);
+  height: 3px;
+  border-radius: 999px;
+  transform: translateX(-50%) scaleX(0.28);
+  transform-origin: center;
+  background: linear-gradient(90deg, transparent, var(--pearl-aqua), var(--sunflower-gold), transparent);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+.is-visible .fx-title::before,
+.fx-title.is-visible::before,
+.section-header.is-visible .fx-title::before {
+  opacity: 0.9;
+  transform: translateX(-50%) scaleX(1);
+}
+
+.fx-question {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+.fx-question::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -0.15em;
+  right: -0.15em;
+  bottom: 0.06em;
+  height: 0.42em;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(151, 216, 196, 0.28), rgba(244, 185, 66, 0.34));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.75s ease 0.18s;
+}
+
+.fx-question.is-visible::after,
+.is-visible .fx-question::after {
+  transform: scaleX(1);
+}
+
+.fx-tilt {
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+.fx-tilt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    280px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(255, 255, 255, 0.34),
+    transparent 55%
+  );
+  transition: opacity 0.2s ease;
+}
+
+.fx-tilt:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 980px) {
+  .story-rail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, body {
+    scroll-behavior: auto;
+  }
+
+  .scroll-progress span,
+  .story-rail a,
+  .story-rail a span,
+  .fx-reveal,
+  .fx-title::before,
+  .fx-question::after,
+  .fx-tilt,
+  .fx-tilt::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .fx-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .fx-tilt {
+    transform: none;
+  }
+}
+
 #overview,
 #flood-records,
-#city-patterns,
+#Time-patterns,
+#market-context,
 #housing-exposure,
 #insights,
 #team {
@@ -262,7 +477,7 @@ html, body {
   min-height: 280px;
   background:
     linear-gradient(180deg, rgba(13, 20, 36, 0.18) 0%, transparent 22%, transparent 60%),
-    url('image/flood.png') center/cover no-repeat,
+    url('/image/flood.png') center/cover no-repeat,
     linear-gradient(160deg, #1c3a5f 0%, #2f5b8a 35%, #4f7da5 60%, #6b9ac4 90%);
 }
 
