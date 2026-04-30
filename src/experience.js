@@ -4,8 +4,8 @@ const sections = [
   { id: 'overview', label: 'Overview' },
   { id: 'flood-records', label: 'Flood Records' },
   { id: 'Time-patterns', label: 'Time Patterns' },
-  { id: 'market-context', label: 'Market Context' },
   { id: 'housing-exposure', label: 'Housing Exposure' },
+  { id: 'market-context', label: 'Market Context', target: 'outer-trend-card' },
   { id: 'insights', label: 'Insights' },
   { id: 'team', label: 'Team' },
 ];
@@ -75,10 +75,10 @@ function createStoryRail() {
   rail.setAttribute('aria-label', 'Story sections');
 
   rail.innerHTML = sections
-    .map(({ id, label }) => {
-      const exists = document.getElementById(id);
+    .map(({ id, label, target = id }) => {
+      const exists = document.getElementById(target);
       if (!exists) return '';
-      return `<a href="#${id}" data-rail-link="${id}" aria-label="${label}"><span>${label}</span></a>`;
+      return `<a href="#${target}" data-rail-link="${id}" aria-label="${label}"><span>${label}</span></a>`;
     })
     .join('');
 
@@ -143,7 +143,11 @@ function revealOnScroll() {
 function syncStoryRail() {
   const links = document.querySelectorAll('[data-rail-link]');
   const observed = sections
-    .map(({ id }) => document.getElementById(id))
+    .map(({ id, target = id }) => {
+      const element = document.getElementById(target);
+      if (element) element.dataset.railSection = id;
+      return element;
+    })
     .filter(Boolean);
 
   if (!links.length || !observed.length || !('IntersectionObserver' in window)) return;
@@ -156,7 +160,7 @@ function syncStoryRail() {
     const visible = entries
       .filter((entry) => entry.isIntersecting)
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    if (visible[0]) setActive(visible[0].target.id);
+    if (visible[0]) setActive(visible[0].target.dataset.railSection || visible[0].target.id);
   }, { rootMargin: '-35% 0px -45% 0px', threshold: [0.1, 0.25, 0.5, 0.75] });
 
   observed.forEach((section) => observer.observe(section));
