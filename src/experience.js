@@ -12,6 +12,40 @@ const sections = [
 
 document.body.classList.add('experience-ready');
 
+function createOpeningSplash() {
+  const splash = document.createElement('div');
+  splash.className = 'opening-splash';
+  splash.setAttribute('aria-hidden', 'true');
+  splash.innerHTML = `
+    <div class="opening-splash-grid"></div>
+    <div class="opening-splash-waves">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="opening-splash-scan"></div>
+    <div class="opening-splash-content">
+      <span class="opening-splash-kicker">Flood Risk Visualisation</span>
+      <strong>UK Flood Explorer</strong>
+      <em>Recorded Floods · Urban Exposure · Housing Markets</em>
+      <div class="opening-splash-meter"><span></span></div>
+    </div>
+  `;
+
+  document.documentElement.classList.add('splash-active');
+  document.body.prepend(splash);
+
+  const dismiss = () => {
+    if (splash.classList.contains('is-leaving')) return;
+    splash.classList.add('is-leaving');
+    document.documentElement.classList.remove('splash-active');
+    window.setTimeout(() => splash.remove(), prefersReducedMotion ? 80 : 780);
+  };
+
+  splash.addEventListener('click', dismiss, { once: true });
+  window.setTimeout(dismiss, prefersReducedMotion ? 360 : 2400);
+}
+
 function createProgress() {
   const bar = document.createElement('div');
   bar.className = 'scroll-progress';
@@ -155,6 +189,7 @@ function markTextEffects() {
   });
 }
 
+createOpeningSplash();
 createProgress();
 createStoryRail();
 markTextEffects();
